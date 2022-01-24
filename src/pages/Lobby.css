@@ -2,3 +2,8 @@ html,
 body {
   height: 100%;
 }
+
+#chats-window {
+  overflow-x: hidden;
+  overflow-y: auto;
+}

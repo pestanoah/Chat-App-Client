@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import MessageInput from "../components/MessageInput";
 import "./Lobby.css";
 
@@ -7,8 +7,14 @@ function Lobby({ socket }) {
 
   const [chats, setChats] = useState([]);
 
+  const lastMessage = useRef(null);
+
+  const scrollToMessage = () => {
+    lastMessage.current.scrollIntoView();
+  };
+
   socket.on("messages", (messages) => {
-    console.log(messages);
+    console.log("Messages recived:", messages);
     setChats(messages);
   });
 
@@ -16,16 +22,28 @@ function Lobby({ socket }) {
     const fetchData = async () => {
       const response = await fetch("/api/messages");
       const data = await response.json();
-      console.log(data.messages);
+      console.log("Inital messages: ", data.messages);
       setChats(data.messages);
+      scrollToMessage();
     };
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (chats.length > 0) {
+      scrollToMessage();
+    }
+  }, [chats]);
+
   const renderedChats = chats.map((chat, i) => {
+    let ref = null;
+    if (i === chats.length - 1) {
+      ref = lastMessage;
+    }
     return (
       <div
         key={i}
+        ref={ref}
         className="row justify-content-between border border-light bg-light"
       >
         <p className="col-10">{chat.message}</p>
@@ -35,7 +53,9 @@ function Lobby({ socket }) {
   });
 
   const sendChat = async () => {
+    console.log("Sending message:", message);
     socket.emit("chat message", message);
+    scrollToMessage();
   };
 
   const handleSubmit = (e) => {
@@ -47,7 +67,9 @@ function Lobby({ socket }) {
 
   return (
     <div className="container h-100">
-      <div className="overflow-auto h-75">{renderedChats}</div>
+      <div className="h-75" id="chats-window">
+        {renderedChats}
+      </div>
       <div className="row mw-100">
         <MessageInput
           handleSubmit={handleSubmit}
