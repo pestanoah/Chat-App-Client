@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import MessageInput from "../components/MessageInput";
 import "./Lobby.css";
+import { SocketContext } from "../context/socket";
 
-function Lobby({ socket }) {
+function Lobby() {
   const [message, setMessage] = useState("");
+
+  const socket = useContext(SocketContext);
 
   const [chats, setChats] = useState([]);
 
@@ -13,11 +16,6 @@ function Lobby({ socket }) {
     lastMessage.current.scrollIntoView();
   };
 
-  socket.on("messages", (messages) => {
-    console.log("Messages recived:", messages);
-    setChats(messages);
-  });
-
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("/api/messages");
@@ -26,7 +24,12 @@ function Lobby({ socket }) {
       setChats(data.messages);
       scrollToMessage();
     };
+
     fetchData();
+    socket.on("messages", (messages) => {
+      console.log("Messages recived:", messages);
+      setChats(messages);
+    });
   }, []);
 
   useEffect(() => {
@@ -62,7 +65,6 @@ function Lobby({ socket }) {
     e.preventDefault();
     sendChat();
     setMessage("");
-    setChats([...chats, message]);
   };
 
   return (
