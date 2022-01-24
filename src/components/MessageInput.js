@@ -15,15 +15,17 @@ function MessageInput({ handleSubmit, message, setMessage }) {
   };
 
   return (
-    <div className="row">
+    <div>
       <form onSubmit={handleSubmit}>
-        <input
-          onChange={handleChange}
-          value={message}
-          className="col-sm-10"
-          type="text"
-        />
-        <button className="col-sm-2">Send</button>
+        <div className="row justify-content-between">
+          <input
+            onChange={handleChange}
+            value={message}
+            className="col-sm-11"
+            type="text"
+          />
+          <button className="col-sm-1 btn btn-primary">Send</button>
+        </div>
       </form>
     </div>
   );

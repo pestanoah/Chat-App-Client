@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Lobby from "../pages/Lobby";
 import io from "socket.io-client";
-import { render } from "react-dom";
 
 function App() {
   const [socket, setSocket] = useState(
@@ -16,11 +15,7 @@ function App() {
     };
   }, [setSocket]);
 
-  return (
-    <div>
-      <Lobby socket={socket} />
-    </div>
-  );
+  return <Lobby socket={socket} />;
 }
 
 export default App;

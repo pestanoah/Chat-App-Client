@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MessageInput from "../components/MessageInput";
+import "./Lobby.css";
 
 function Lobby({ socket }) {
   const [message, setMessage] = useState("");
@@ -13,9 +14,7 @@ function Lobby({ socket }) {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("/api/messages");
-      console.log(response);
       const data = await response.json();
-      console.log(data);
       setChats(data.messages);
     };
     fetchData();
@@ -23,7 +22,7 @@ function Lobby({ socket }) {
 
   const renderedChats = chats.map((chat, i) => {
     return (
-      <p className="border border-light" key={i}>
+      <p className="border border-light bg-light" key={i}>
         {chat}
       </p>
     );
@@ -41,17 +40,9 @@ function Lobby({ socket }) {
   };
 
   return (
-    <div className="container">
-      <div
-        data-bs-spy="scroll"
-        data-bs-target="#navbar-example2"
-        data-bs-offset="0"
-        className="scrollspy-example"
-        tabIndex="0"
-      >
-        {renderedChats}
-      </div>
-      <div className="row">
+    <div className="container h-100">
+      <div className="overflow-auto h-75">{renderedChats}</div>
+      <div className="row mw-100">
         <MessageInput
           handleSubmit={handleSubmit}
           message={message}
