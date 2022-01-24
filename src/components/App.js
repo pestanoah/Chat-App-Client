@@ -7,14 +7,6 @@ function App() {
     io(`http://${window.location.hostname}:3000`)
   );
 
-  useEffect(() => {
-    const newSocket = io(`http://${window.location.hostname}:3000`);
-    setSocket(newSocket);
-    return () => {
-      newSocket.close();
-    };
-  }, [setSocket]);
-
   return <Lobby socket={socket} />;
 }
 
