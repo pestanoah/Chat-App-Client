@@ -8,6 +8,7 @@ function Lobby({ socket }) {
   const [chats, setChats] = useState([]);
 
   socket.on("messages", (messages) => {
+    console.log(messages);
     setChats(messages);
   });
 
@@ -15,6 +16,7 @@ function Lobby({ socket }) {
     const fetchData = async () => {
       const response = await fetch("/api/messages");
       const data = await response.json();
+      console.log(data.messages);
       setChats(data.messages);
     };
     fetchData();
@@ -22,9 +24,13 @@ function Lobby({ socket }) {
 
   const renderedChats = chats.map((chat, i) => {
     return (
-      <p className="border border-light bg-light" key={i}>
-        {chat}
-      </p>
+      <div
+        key={i}
+        className="row justify-content-between border border-light bg-light"
+      >
+        <p className="col-10">{chat.message}</p>
+        <p className="col-2">{new Date(chat.timestamp).toLocaleTimeString()}</p>
+      </div>
     );
   });
 
